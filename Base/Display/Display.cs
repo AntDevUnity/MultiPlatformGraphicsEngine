@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MpGe.Base;
 
 /// <summary>
 /// Screen implementations.
@@ -12,7 +13,7 @@ namespace MpGe.Display
     /// <summary>
     /// Contains information and methods for interacting with the current screen(Visual output) being used in your app.
     /// </summary>
-    public class Display
+    public class DisplayBase
     {
 
         /// <summary>
@@ -68,14 +69,42 @@ namespace MpGe.Display
             get;
             set;
         }
+        
+        /// <summary>
+        /// The name of the display.
+        /// </summary>
+        public string Name
+        {
+            get;
+            set;
+        }
 
-        public Display(DisplayMetrics metrics)
+        /// <summary>
+        /// The color format of the display.
+        /// </summary>
+        public ColorFormat Format
+        {
+            get;
+            set;
+        }
+
+        public DisplayBase(DisplayMetrics metrics)
+        {
+            SetMetrics(metrics);
+        }
+
+        protected internal void SetMetrics(DisplayMetrics metrics)
         {
             Metrics = metrics;
             DesktopX = metrics.RequestDesktopX;
             DesktopY = metrics.RequestDesktopY;
             Width = metrics.RequestWidth;
             Height = metrics.RequestHeight;
+        }
+
+        public virtual Result Request()
+        {
+            return new Result(false,new NotImplementedException("This display has not been implmented fully."));
         }
 
 
