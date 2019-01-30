@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using MpGe.Display;
 using MpGe.Base;
+using SharpDX.Windows;
 
 namespace MpGEPlatformDX12.Display
 {
@@ -20,6 +21,15 @@ namespace MpGEPlatformDX12.Display
             Metrics = metrics;
          
         }
+        
+        /// <summary>
+        /// The internal RenderForm;
+        /// </summary>
+        public RenderForm Form
+        {
+            get;
+            set;
+        }
 
 
         /// <summary>
@@ -28,6 +38,15 @@ namespace MpGEPlatformDX12.Display
         /// <returns></returns>
         public override Result Request()
         {
+
+            Form = new RenderForm(Metrics.RequestName)
+            {
+                Width = Metrics.RequestWidth,
+                Height = Metrics.RequestHeight
+            };
+
+            Form.Show();
+
             Console.WriteLine("Creating DirectX12 display");
             return new Result(true);
             //   return base.Request();
