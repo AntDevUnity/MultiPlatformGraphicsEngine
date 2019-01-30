@@ -47,7 +47,12 @@ namespace MpGEPlatformDX12.Platform
                 {
 
                     Update?.Invoke();
+
+                    IntDis.BeginDraw();
+
                     Draw?.Invoke();
+
+                    IntDis.EndDraw();
 
                 }
 

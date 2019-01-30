@@ -82,7 +82,7 @@ namespace MpGe.Display
         /// <summary>
         /// The color format of the display.
         /// </summary>
-        public ColorFormat Format
+        public ColorFormat DisplayFormat
         {
             get;
             set;
@@ -101,6 +101,7 @@ namespace MpGe.Display
             DesktopY = metrics.RequestDesktopY;
             Width = metrics.RequestWidth;
             Height = metrics.RequestHeight;
+            DisplayFormat = metrics.RequestFormat;
         }
 
         public virtual Result Request()
@@ -108,6 +109,16 @@ namespace MpGe.Display
             return new Result(false,new NotImplementedException("This display has not been implmented fully."));
         }
 
+        public virtual void BeginDraw()
+        {
+
+
+        }
+
+        public virtual void EndDraw()
+        {
+
+        }
 
     }
     
