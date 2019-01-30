@@ -111,6 +111,10 @@
   <ItemGroup>
     <Compile Include="Class1.cs" />
     <Compile Include="Display\DisplayDX12.cs" />
+    <Compile Include="Draw2D\Draw2D.cs" />
+    <Compile Include="DXGlobal.cs" />
+    <Compile Include="Effect\Effect.cs" />
+    <Compile Include="Effect\2D\EffectSimple2D.cs" />
     <Compile Include="PlatformExt.cs" />
     <Compile Include="Platform\PlatformDX12.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

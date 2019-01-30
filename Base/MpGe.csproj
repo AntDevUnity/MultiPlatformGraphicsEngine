@@ -63,6 +63,8 @@
     <Compile Include="Base\PlatformImplentation.cs" />
     <Compile Include="Class1.cs" />
     <Compile Include="Display\ColorFormat.cs" />
+    <Compile Include="Draw2D\Draw2DBase.cs" />
+    <Compile Include="Effect\EffectBase.cs" />
     <Compile Include="Platform\PlatformBase.cs" />
     <Compile Include="Platform\PlatformMetrics.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

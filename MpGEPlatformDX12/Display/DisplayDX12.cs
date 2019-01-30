@@ -164,7 +164,10 @@ namespace MpGEPlatformDX12.Display
                 DebugInterface.Get().EnableDebugLayer();
             }
 #endif
-            device = new Device(null, SharpDX.Direct3D.FeatureLevel.Level_11_0);
+            device = new Device(null, SharpDX.Direct3D.FeatureLevel.Level_12_1);
+
+            DXGlobal.device = device;
+
             using (var factory = new Factory4())
             {
                 // Describe and create the command queue.
