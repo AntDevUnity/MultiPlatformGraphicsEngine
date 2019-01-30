@@ -91,6 +91,7 @@ namespace MpGe.Display
         public DisplayBase(DisplayMetrics metrics)
         {
             SetMetrics(metrics);
+            Request();
         }
 
         protected internal void SetMetrics(DisplayMetrics metrics)

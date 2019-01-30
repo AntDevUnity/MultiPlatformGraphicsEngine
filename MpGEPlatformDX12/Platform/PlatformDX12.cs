@@ -24,6 +24,7 @@ namespace MpGEPlatformDX12.Platform
         public override Result CreateDisplay(DisplayMetrics metrics)
         {
             //return base.CreateDisplay(metrics);
+            Display = new Display.DisplayDX12(metrics);
             return null;
         }
 
