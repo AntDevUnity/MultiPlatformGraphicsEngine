@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MpGEPlatformDX12
 {
-    class PlatformExt
+    public class PlatformExt
     {
     }
 }

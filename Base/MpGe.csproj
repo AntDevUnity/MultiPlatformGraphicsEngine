@@ -59,17 +59,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="App\Application.cs" />
+    <Compile Include="Base\PlatformImplentation.cs" />
     <Compile Include="Class1.cs" />
     <Compile Include="Display\ColorFormat.cs" />
     <Compile Include="Platform\PlatformBase.cs" />
     <Compile Include="Platform\PlatformMetrics.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Display\Display.cs" />
+    <Compile Include="Display\DisplayBase.cs" />
     <Compile Include="Display\DisplayMetrics.cs" />
     <Compile Include="Base\Result.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="App\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
