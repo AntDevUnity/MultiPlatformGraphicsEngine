@@ -31,6 +31,12 @@ namespace MpGEPlatformDX12.Display
             set;
         }
 
+        public RenderLoop Loop
+        {
+            get;
+            set;
+        }
+
 
         /// <summary>
         /// Requests the required display.

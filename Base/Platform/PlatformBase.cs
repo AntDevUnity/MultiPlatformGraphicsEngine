@@ -21,6 +21,24 @@ namespace MpGe.Platform
             set;
         }
 
+        public InitApp Init
+        {
+            get;
+            set;
+        }
+
+        public UpdateApp Update
+        {
+            get;
+            set;
+        }
+
+        public DrawApp Draw
+        {
+            get;
+            set;
+        }
+
         public void InitPlatform()
         {
 
@@ -31,5 +49,15 @@ namespace MpGe.Platform
             return new Result(false, new NotImplementedException("This platform is not fully implemented."));
         }
 
+        public virtual void Run()
+        {
+
+        }
+
     }
+
+    public delegate void InitApp();
+    public delegate void UpdateApp();
+    public delegate void DrawApp();
+
 }

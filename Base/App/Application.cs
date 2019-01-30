@@ -61,10 +61,7 @@ namespace MpGe.App
 
             Console.WriteLine("Running application.");
 
-            while (true)
-            {
-
-            }
+            Platform.Run();
 
         }
 
