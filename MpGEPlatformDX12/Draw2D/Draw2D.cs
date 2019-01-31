@@ -19,17 +19,17 @@ namespace MpGEPlatformDX12.Draw2D
 
             var verts = new[]
        {
-                    new Vertex() {Position=new Vector3(0.0f, 0.05f  , 0.0f ),Color=new Vector4(1.0f, 0.0f, 0.0f, 1.0f ) },
-                    new Vertex() {Position=new Vector3(0.25f, -0.25f , 0.0f),Color=new Vector4(0.0f, 1.0f, 0.0f, 1.0f) },
-                    new Vertex() {Position=new Vector3(-0.25f, -0.25f , 0.0f),Color=new Vector4(0.0f, 0.0f, 1.0f, 1.0f ) },
-                    
+                    new Vertex() {Position=new Vector3(200,100f  , 0.0f ),Color=new Vector4(1.0f, 0.0f, 0.0f, 1.0f ) },
+                    new Vertex() {Position=new Vector3(440f,100f , 0.0f),Color=new Vector4(0.0f, 1.0f, 0.0f, 1.0f) },
+                    new Vertex() {Position=new Vector3(440f,300 , 0.0f),Color=new Vector4(0.0f, 0.0f, 1.0f, 1.0f ) },
+
             };
 
             var verts2 = new[]
       {
-                    new Vertex() {Position=new Vector3(0.0f+0.4f, 0.6f  , 0.0f ),Color=new Vector4(1.0f, 0.0f, 0.0f, 1.0f ) },
-                    new Vertex() {Position=new Vector3(0.25f+0.4f, -0.25f , 0.0f),Color=new Vector4(0.0f, 1.0f, 0.0f, 1.0f) },
-                    new Vertex() {Position=new Vector3(-0.25f+0.4f, -0.25f , 0.0f),Color=new Vector4(0.0f, 0.0f, 1.0f, 1.0f ) },
+                    new Vertex() {Position=new Vector3(0.7f, 0.15f  , 0.1f ),Color=new Vector4(1.0f, 0.0f, 0.0f, 1.0f ) },
+                    new Vertex() {Position=new Vector3(200f, 2f , 0.1f),Color=new Vector4(0.0f, 1.0f, 0.0f, 1.0f) },
+                    new Vertex() {Position=new Vector3(200f, 200f , 0.1f),Color=new Vector4(0.0f, 0.0f, 1.0f, 1.0f ) },
 
             };
 
@@ -45,7 +45,7 @@ namespace MpGEPlatformDX12.Draw2D
         private Buffer.VertexBufferDX12 vb2;
         private Buffer.VertexBufferDX12 vb;
 
-        public override void Rect(float x,float y,float w,float h)
+        public override void Rect(float x, float y, float w, float h)
         {
 
 
@@ -55,8 +55,15 @@ namespace MpGEPlatformDX12.Draw2D
 
             FXSimple2D.BeginRen();
 
-            DXGlobal.Display.DrawBuffer(vb);
-            DXGlobal.Display.DrawBuffer(vb2);
+            Effect.Simple2DConst s2 = new Effect.Simple2DConst
+            {
+                Proj = SharpDX.Matrix.OrthoOffCenterLH(0, 800, 600,0,0, 1)
+            };
+
+            FXSimple2D.cbuf.CopyData(0, ref s2);
+
+            DXGlobal.Display.DrawBuffer(vb,FXSimple2D);
+            DXGlobal.Display.DrawBuffer(vb2,FXSimple2D);
 
             FXSimple2D.EndRen();
 

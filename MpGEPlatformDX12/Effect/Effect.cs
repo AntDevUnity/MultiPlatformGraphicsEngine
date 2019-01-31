@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using MpGe.Effect;
 using SharpDX.DXGI;
 using System.Threading;
+using System.Runtime.InteropServices;
 
 
 namespace MpGEPlatformDX12.Effect
@@ -15,7 +16,11 @@ namespace MpGEPlatformDX12.Effect
     using SharpDX.Direct3D12;
     using SharpDX.Windows;
 
-
+    [StructLayout(LayoutKind.Sequential, Pack = 4)]
+    public struct Simple2DConst
+    {
+        public Matrix Proj;
+    }
     public class Effect : EffectBase
     {
 
@@ -34,7 +39,10 @@ namespace MpGEPlatformDX12.Effect
         public void LoadShaders(string path)
         {
 
-            
+            BuildDescriptorHeaps();
+            BuildConstantBuffers<Simple2DConst>();
+            BuildRootSignature();
+            Root = _rootSignature;
 
             VertexCode = LoadVertex(path);
             FragCode = LoadFrag(path);
@@ -67,6 +75,72 @@ namespace MpGEPlatformDX12.Effect
 
         }
 
+        private static void BuildRootSignature()
+        {
+            // Shader programs typically require resources as input (constant buffers,
+            // textures, samplers). The root signature defines the resources the shader
+            // programs expect. If we think of the shader programs as a function, and
+            // the input resources as function parameters, then the root signature can be
+            // thought of as defining the function signature.
+
+            // Root parameter can be a table, root descriptor or root constants.
+
+            // Create a single descriptor table of CBVs.
+            var cbvTable = new DescriptorRange(DescriptorRangeType.ConstantBufferView, 1, 0);
+
+            // A root signature is an array of root parameters.
+            var rootSigDesc = new RootSignatureDescription(RootSignatureFlags.AllowInputAssemblerInputLayout, new[]
+            {
+                new RootParameter(ShaderVisibility.Vertex, cbvTable)
+            });
+
+            _rootSignature = DXGlobal.device.CreateRootSignature(rootSigDesc.Serialize());
+            
+        }
+
+        private static RootSignature _rootSignature;
+
+        private void BuildDescriptorHeaps()
+        {
+            var cbvHeapDesc = new DescriptorHeapDescription
+            {
+                DescriptorCount = 1,
+                Type = DescriptorHeapType.ConstantBufferViewShaderResourceViewUnorderedAccessView,
+                Flags = DescriptorHeapFlags.ShaderVisible,
+                NodeMask = 0
+            };
+            _cbvHeap = DXGlobal.device.CreateDescriptorHeap(cbvHeapDesc);
+            _descriptorHeaps = new[] { _cbvHeap };
+        }
+
+        public DescriptorHeap _cbvHeap;
+
+        static private DescriptorHeap[] _descriptorHeaps;
+
+
+
+        private void BuildConstantBuffers<TYPE>() where TYPE : struct
+        {
+            int sizeInBytes = DXUtil1.D3DUtil.CalcConstantBufferByteSize<TYPE>();
+
+            cbuf = new DXUtil2.UploadBuffer<TYPE>(DXGlobal.device, 1, true);
+
+
+            var cbvDesc = new ConstantBufferViewDescription
+            {
+                BufferLocation = cbuf.Resource.GPUVirtualAddress,
+                SizeInBytes = sizeInBytes
+            };
+            CpuDescriptorHandle cbvHeapHandle = _cbvHeap.CPUDescriptorHandleForHeapStart;
+            DXGlobal.device.CreateConstantBufferView(cbvDesc, cbvHeapHandle);
+        }
+
+
+        public dynamic cbuf = null;
+        //DXUtil2.UploadBuffer<ConType> _conBuf;
+
+
+
         public void BeginRen()
         {
             //commandAllocator.Reset();
@@ -75,19 +149,22 @@ namespace MpGEPlatformDX12.Effect
             // list, that command list can then be reset at any time and must be before 
             // re-recording.
             commandList.Reset(DXGlobal.Display.commandAllocator, pipelineState);
-
-            commandList.SetGraphicsRootSignature(DXGlobal.Root);
             commandList.SetViewport(DXGlobal.Display.viewport);
             commandList.SetScissorRectangles(DXGlobal.Display.scissorRect);
-            commandList.ResourceBarrierTransition(DXGlobal.Display.renderTargets[DXGlobal.Display.frameIndex], ResourceStates.Present, ResourceStates.RenderTarget);
 
+    
+            
+            commandList.ResourceBarrierTransition(DXGlobal.Display.renderTargets[DXGlobal.Display.frameIndex], ResourceStates.Present, ResourceStates.RenderTarget);
+           
 
             var rtvHandle = DXGlobal.Display.renderTargetViewHeap.CPUDescriptorHandleForHeapStart;
             rtvHandle += DXGlobal.Display.frameIndex * DXGlobal.Display.rtvDescriptorSize;
             commandList.SetRenderTargets(rtvHandle, null);
 
             commandList.ClearRenderTargetView(rtvHandle, new Color4(0.3f, 0.2F, 0.4f, 1), 0, null);
+            commandList.SetDescriptorHeaps(_descriptorHeaps.Length, _descriptorHeaps);
 
+            commandList.SetGraphicsRootSignature(Root);
 
 
         }

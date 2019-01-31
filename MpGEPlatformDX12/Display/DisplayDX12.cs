@@ -125,9 +125,10 @@ namespace MpGEPlatformDX12.Display
            // commandList.Close();
         }
 
-        public override void DrawBuffer(VertexBufferBase vb)
+        public override void DrawBuffer(VertexBufferBase vb,MpGe.Effect.EffectBase eb)
         {
 
+            var eff = eb as Effect.Effect;
            
             Buffer.VertexBufferDX12 buf = vb as Buffer.VertexBufferDX12;
 
@@ -135,9 +136,9 @@ namespace MpGEPlatformDX12.Display
 
             list.PrimitiveTopology = SharpDX.Direct3D.PrimitiveTopology.TriangleList;
             list.SetVertexBuffer(0, buf.vertexBufferView);
+        
+            list.SetGraphicsRootDescriptorTable(0, eff._cbvHeap.GPUDescriptorHandleForHeapStart);
             list.DrawInstanced(3, 1, 0, 0);
-
-
         }
 
 
