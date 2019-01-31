@@ -19,7 +19,7 @@ namespace MpGEPlatformDX12
     public class DXGlobal
     {
 
-      
+        public static RootSignature Root;
         public static Display.DisplayDX12 Display;
         public static SwapChain3 swapChain;
         public static Device device;

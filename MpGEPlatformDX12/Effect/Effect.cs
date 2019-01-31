@@ -34,8 +34,7 @@ namespace MpGEPlatformDX12.Effect
         public void LoadShaders(string path)
         {
 
-            var rootSignatureDesc = new RootSignatureDescription(RootSignatureFlags.AllowInputAssemblerInputLayout);
-            Root = DXGlobal.device.CreateRootSignature(rootSignatureDesc.Serialize());
+            
 
             VertexCode = LoadVertex(path);
             FragCode = LoadFrag(path);
@@ -77,7 +76,7 @@ namespace MpGEPlatformDX12.Effect
             // re-recording.
             commandList.Reset(DXGlobal.Display.commandAllocator, pipelineState);
 
-            commandList.SetGraphicsRootSignature(DXGlobal.Display.rootSignature);
+            commandList.SetGraphicsRootSignature(DXGlobal.Root);
             commandList.SetViewport(DXGlobal.Display.viewport);
             commandList.SetScissorRectangles(DXGlobal.Display.scissorRect);
             commandList.ResourceBarrierTransition(DXGlobal.Display.renderTargets[DXGlobal.Display.frameIndex], ResourceStates.Present, ResourceStates.RenderTarget);

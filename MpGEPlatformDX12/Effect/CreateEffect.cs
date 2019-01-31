@@ -33,6 +33,10 @@ namespace MpGEPlatformDX12.Effect
 
                 BuildDescriptorHeaps();
                 BuildConstantBuffers();
+                BuildRootSignature();
+
+                fx.Root = _rootSignature;
+                DXGlobal.Root = _rootSignature;
 
                 fx.Input = new[]
                 {
@@ -50,12 +54,41 @@ namespace MpGEPlatformDX12.Effect
 
             };
             fx.LoadShaders("Data/Platform/DX12/Shader/2DSimple.hlsl");
+            var cb2 = new Simple2DConst
+            {
+                Proj = Matrix.OrthoOffCenterLH(0, 800,600,0, 0, 1)
+            };
+            _projBuf.CopyData(0, ref cb2);
 
-         
 
             return fx;
 
         }
+
+        private static void BuildRootSignature()
+        {
+            // Shader programs typically require resources as input (constant buffers,
+            // textures, samplers). The root signature defines the resources the shader
+            // programs expect. If we think of the shader programs as a function, and
+            // the input resources as function parameters, then the root signature can be
+            // thought of as defining the function signature.
+
+            // Root parameter can be a table, root descriptor or root constants.
+
+            // Create a single descriptor table of CBVs.
+            var cbvTable = new DescriptorRange(DescriptorRangeType.ConstantBufferView, 1, 0);
+
+            // A root signature is an array of root parameters.
+            var rootSigDesc = new RootSignatureDescription(RootSignatureFlags.AllowInputAssemblerInputLayout, new[]
+            {
+                new RootParameter(ShaderVisibility.Vertex, cbvTable)
+            });
+
+            _rootSignature = DXGlobal.device.CreateRootSignature(rootSigDesc.Serialize());
+        }
+
+        private static RootSignature _rootSignature;
+
         private static void BuildDescriptorHeaps()
         {
             var cbvHeapDesc = new DescriptorHeapDescription

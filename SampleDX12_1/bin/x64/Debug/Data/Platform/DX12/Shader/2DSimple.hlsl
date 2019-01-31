@@ -15,7 +15,7 @@ PSInput VSMain(float4 position : POSITION, float4 color : COLOR)
 
 	// vout.PosH = mul(float4(vin.PosL, 1.0f), gWorldViewProj);
 
-	result.position = mul(position,gProj);
+	result.position = position; //mul(position,gProj);
 
 	//esult.position = mul(position,gProj);
 
