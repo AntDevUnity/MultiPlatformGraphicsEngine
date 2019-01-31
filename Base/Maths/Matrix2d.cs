@@ -23,7 +23,7 @@ SOFTWARE.
 using System;
 using System.Diagnostics.CodeAnalysis;
 
-namespace OpenToolkit.Mathematics
+namespace MpGe.Maths
 {
     /// <summary>
     /// Represents a 2x2 matrix.

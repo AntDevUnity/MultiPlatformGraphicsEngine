@@ -71,6 +71,7 @@
   <ItemGroup>
     <Compile Include="App\Application.cs" />
     <Compile Include="Base\PlatformImplentation.cs" />
+    <Compile Include="Buffer\VertexBufferBase.cs" />
     <Compile Include="Class1.cs" />
     <Compile Include="Create\CreateBase.cs" />
     <Compile Include="Data\Vertex2D.cs" />

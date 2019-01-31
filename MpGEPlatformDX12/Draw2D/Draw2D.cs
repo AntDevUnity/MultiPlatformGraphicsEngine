@@ -20,5 +20,12 @@ namespace MpGEPlatformDX12.Draw2D
 
         }
 
+        public void Rect(float x,float y,float w,float h)
+        {
+
+
+
+        }
+
     }
 }

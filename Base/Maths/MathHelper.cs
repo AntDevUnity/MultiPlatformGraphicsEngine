@@ -9,7 +9,7 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 
-namespace OpenToolkit.Mathematics
+namespace MpGe.Maths
 {
     /// <summary>
     /// Contains common mathematical functions and constants.

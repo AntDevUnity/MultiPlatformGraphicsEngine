@@ -24,7 +24,7 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 
-namespace OpenToolkit.Mathematics
+namespace MpGe.Maths
 {
     /// <summary>
     /// Represents a 4x4 matrix containing 3D rotation, scale, transform, and projection with double-precision components.

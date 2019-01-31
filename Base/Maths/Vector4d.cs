@@ -26,7 +26,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Xml.Serialization;
 
-namespace OpenToolkit.Mathematics
+namespace MpGe.Maths
 {
     /// <summary>
     /// Represents a 4D vector using four double-precision floating-point numbers.

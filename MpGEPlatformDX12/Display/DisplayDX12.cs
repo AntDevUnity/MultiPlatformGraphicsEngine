@@ -140,6 +140,8 @@ namespace MpGEPlatformDX12.Display
             // Create the command list.
             commandList = device.CreateCommandList(CommandListType.Direct, commandAllocator, null);
 
+            aspectRation = viewport.Width / viewport.Height;
+
             // Command lists are created in the recording state, but there is nothing
             // to record yet. The main loop expects it to be closed, so close it now.
             commandList.Close();
@@ -151,7 +153,7 @@ namespace MpGEPlatformDX12.Display
             // Create an event handle to use for frame synchronization.
             fenceEvent = new AutoResetEvent(false);
         }
-
+        float aspectRation;
         private void LoadPipeline(RenderForm form)
         {
 

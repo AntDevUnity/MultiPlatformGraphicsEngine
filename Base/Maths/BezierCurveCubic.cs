@@ -8,7 +8,7 @@
 
 using System;
 
-namespace OpenToolkit.Mathematics
+namespace MpGe.Maths
 {
     /// <summary>
     /// Represents a cubic bezier curve with two anchor and two control points.
