@@ -28,6 +28,9 @@ namespace MpGEPlatformDX12.Effect
 
         public InputElement[] Input = null;
 
+        public PipelineState pipelineState;
+
+
         public void LoadShaders(string path)
         {
 
@@ -57,7 +60,7 @@ namespace MpGEPlatformDX12.Effect
             };
             psoDesc.RenderTargetFormats[0] = SharpDX.DXGI.Format.R8G8B8A8_UNorm;
 
-         //   pipelineState = device.CreateGraphicsPipelineState(psoDesc);
+            pipelineState = DXGlobal.device.CreateGraphicsPipelineState(psoDesc);
 
 
 
@@ -65,7 +68,7 @@ namespace MpGEPlatformDX12.Effect
 
         public virtual void SetupShader()
         {
-
+            Init?.Invoke(null);
 
         }
 

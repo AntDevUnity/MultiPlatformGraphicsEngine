@@ -32,6 +32,9 @@ namespace MpGEPlatformDX12.Platform
             //return base.CreateDisplay(metrics);
             Display = new Display.DisplayDX12(metrics);
             IntDis = Display as Display.DisplayDX12;
+
+            Global.Creator = new Create.CreateDX12();
+
             return null;
         }
 

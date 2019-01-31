@@ -154,9 +154,16 @@ namespace MpGEPlatformDX12.Display
 
         private void LoadPipeline(RenderForm form)
         {
-        
+
             int width = form.ClientSize.Width;
             int height = form.ClientSize.Height;
+
+            viewport.Width = width;
+            viewport.Height = height;
+            viewport.MaxDepth = 1.0f;
+
+            scissorRect.Right = width;
+            scissorRect.Bottom = height;
 
 #if DEBUG
             // Enable the D3D12 debug layer.
@@ -164,19 +171,17 @@ namespace MpGEPlatformDX12.Display
                 DebugInterface.Get().EnableDebugLayer();
             }
 #endif
-            device = new Device(null, SharpDX.Direct3D.FeatureLevel.Level_12_1);
-
+            device = new Device(null, SharpDX.Direct3D.FeatureLevel.Level_11_0);
             DXGlobal.device = device;
-
             using (var factory = new Factory4())
             {
                 // Describe and create the command queue.
-                CommandQueueDescription queueDesc = new CommandQueueDescription(CommandListType.Direct);
+                var queueDesc = new CommandQueueDescription(CommandListType.Direct);
                 commandQueue = device.CreateCommandQueue(queueDesc);
 
 
                 // Describe and create the swap chain.
-                SwapChainDescription swapChainDesc = new SwapChainDescription()
+                var swapChainDesc = new SwapChainDescription()
                 {
                     BufferCount = FrameCount,
                     ModeDescription = new ModeDescription(width, height, new Rational(60, 1), Format.R8G8B8A8_UNorm),
@@ -188,7 +193,7 @@ namespace MpGEPlatformDX12.Display
                     IsWindowed = true
                 };
 
-                SwapChain tempSwapChain = new SwapChain(factory, commandQueue, swapChainDesc);
+                var tempSwapChain = new SwapChain(factory, commandQueue, swapChainDesc);
                 swapChain = tempSwapChain.QueryInterface<SwapChain3>();
                 tempSwapChain.Dispose();
                 frameIndex = swapChain.CurrentBackBufferIndex;
@@ -196,7 +201,7 @@ namespace MpGEPlatformDX12.Display
 
             // Create descriptor heaps.
             // Describe and create a render target view (RTV) descriptor heap.
-            DescriptorHeapDescription rtvHeapDesc = new DescriptorHeapDescription()
+            var rtvHeapDesc = new DescriptorHeapDescription()
             {
                 DescriptorCount = FrameCount,
                 Flags = DescriptorHeapFlags.None,
@@ -208,7 +213,7 @@ namespace MpGEPlatformDX12.Display
             rtvDescriptorSize = device.GetDescriptorHandleIncrementSize(DescriptorHeapType.RenderTargetView);
 
             // Create frame resources.
-            CpuDescriptorHandle rtvHandle = renderTargetViewHeap.CPUDescriptorHandleForHeapStart;
+            var rtvHandle = renderTargetViewHeap.CPUDescriptorHandleForHeapStart;
             for (int n = 0; n < FrameCount; n++)
             {
                 renderTargets[n] = swapChain.GetBackBuffer<Resource>(n);
@@ -218,20 +223,25 @@ namespace MpGEPlatformDX12.Display
 
             commandAllocator = device.CreateCommandAllocator(CommandListType.Direct);
         }
-
         const int FrameCount = 2;
 
+        private ViewportF viewport;
+        private Rectangle scissorRect;
         // Pipeline objects.
         private SwapChain3 swapChain;
         private Device device;
-        private Resource[] renderTargets = new Resource[FrameCount];
-
+        private readonly Resource[] renderTargets = new Resource[FrameCount];
         private CommandAllocator commandAllocator;
         private CommandQueue commandQueue;
+        private RootSignature rootSignature;
         private DescriptorHeap renderTargetViewHeap;
-
+        private PipelineState pipelineState;
         private GraphicsCommandList commandList;
         private int rtvDescriptorSize;
+
+        // App resources.
+        Resource vertexBuffer;
+        VertexBufferView vertexBufferView;
 
         // Synchronization objects.
         private int frameIndex;
@@ -239,6 +249,5 @@ namespace MpGEPlatformDX12.Display
 
         private Fence fence;
         private int fenceValue;
-
     }
 }

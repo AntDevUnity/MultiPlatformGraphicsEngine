@@ -62,5 +62,29 @@ namespace MpGe.Effect
 
         }
 
+        public BindEffect Bind
+        {
+            get;
+            set;
+        }
+
+        public ReleaseEffect Release
+        {
+            get;
+            set;
+        }
+
+        public InitEffect Init
+        {
+            get;
+            set;
+        }
+
     }
+
+    public delegate void BindEffect(object par);
+    public delegate void ReleaseEffect(object par);
+    public delegate void InitEffect(object par);
+    
+
 }
