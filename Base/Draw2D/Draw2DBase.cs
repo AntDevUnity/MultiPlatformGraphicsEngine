@@ -34,5 +34,10 @@ namespace MpGe.Draw2D
 
         }
 
+        public virtual void Rect(float x,float y,float w,float h)
+        {
+
+        }
+
     }
 }

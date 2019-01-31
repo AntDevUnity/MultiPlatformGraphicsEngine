@@ -120,6 +120,11 @@ namespace MpGe.Display
 
         }
 
+        public virtual void DrawBuffer(Buffer.VertexBufferBase vb)
+        {
+
+        }
+
     }
     
 }

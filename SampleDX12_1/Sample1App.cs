@@ -46,7 +46,7 @@ namespace SampleDX12_1
 
             Platform.Draw = () =>
             {
-
+                Draw.Rect(20, 20, 200, 200);
             };
 
         }

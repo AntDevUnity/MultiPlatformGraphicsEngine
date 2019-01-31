@@ -19,6 +19,8 @@ namespace MpGEPlatformDX12
     public class DXGlobal
     {
 
+      
+        public static Display.DisplayDX12 Display;
         public static SwapChain3 swapChain;
         public static Device device;
       //  private Resource[] renderTargets = new Resource[FrameCount];

@@ -11,7 +11,8 @@ using MpGe.Base;
 using SharpDX.DXGI;
 namespace MpGEPlatformDX12.Display
 {
-       using SharpDX;
+    using MpGe.Buffer;
+    using SharpDX;
     using SharpDX.Direct3D12;
     using SharpDX.Windows;
 
@@ -26,7 +27,7 @@ namespace MpGEPlatformDX12.Display
         public DisplayDX12(DisplayMetrics metrics) : base(metrics)
         {
             Metrics = metrics;
-         
+            DXGlobal.Display = this;
         }
         
         /// <summary>
@@ -70,19 +71,23 @@ namespace MpGEPlatformDX12.Display
 
         public override void BeginDraw()
         {
-            PopulateCommandList();
+
+            commandAllocator.Reset();
 
         
 
-            base.BeginDraw();
+       //     base.BeginDraw();
         }
 
         public override void EndDraw()
         {
 
-            commandQueue.ExecuteCommandList(commandList);
+
+
+            //  commandQueue.ExecuteCommandList(commandList);
 
             swapChain.Present(1, 0);
+
 
             WaitForPreviousFrame();
             base.EndDraw();
@@ -100,34 +105,57 @@ namespace MpGEPlatformDX12.Display
             // re-recording.
             commandList.Reset(commandAllocator, null);
 
+            commandList.SetGraphicsRootSignature(rootSignature);
+            commandList.SetViewport(viewport);
+            commandList.SetScissorRectangles(scissorRect);
+
+
             // Indicate that the back buffer will be used as a render target.
             commandList.ResourceBarrierTransition(renderTargets[frameIndex], ResourceStates.Present, ResourceStates.RenderTarget);
 
-            CpuDescriptorHandle rtvHandle = renderTargetViewHeap.CPUDescriptorHandleForHeapStart;
+            var rtvHandle = renderTargetViewHeap.CPUDescriptorHandleForHeapStart;
             rtvHandle += frameIndex * rtvDescriptorSize;
+            commandList.SetRenderTargets(rtvHandle, null);
 
             // Record commands.
             commandList.ClearRenderTargetView(rtvHandle, new Color4(0, 0.2F, 0.4f, 1), 0, null);
 
-            // Indicate that the back buffer will now be used to present.
-            commandList.ResourceBarrierTransition(renderTargets[frameIndex], ResourceStates.RenderTarget, ResourceStates.Present);
+          
 
-            commandList.Close();
+           // commandList.Close();
         }
+
+        public override void DrawBuffer(VertexBufferBase vb)
+        {
+
+           
+            Buffer.VertexBufferDX12 buf = vb as Buffer.VertexBufferDX12;
+
+            var list = buf.commandList;
+
+            list.PrimitiveTopology = SharpDX.Direct3D.PrimitiveTopology.TriangleList;
+            list.SetVertexBuffer(0, buf.vertexBufferView);
+            list.DrawInstanced(3, 1, 0, 0);
+
+
+        }
+
 
         private void WaitForPreviousFrame()
         {
             // WAITING FOR THE FRAME TO COMPLETE BEFORE CONTINUING IS NOT BEST PRACTICE. 
             // This is code implemented as such for simplicity. 
+            // WAITING FOR THE FRAME TO COMPLETE BEFORE CONTINUING IS NOT BEST PRACTICE. 
+            // This is code implemented as such for simplicity. 
 
-            int fence = fenceValue;
-            commandQueue.Signal(this.fence, fence);
+            int localFence = fenceValue;
+            commandQueue.Signal(this.fence, localFence);
             fenceValue++;
 
             // Wait until the previous frame is finished.
-            if (this.fence.CompletedValue < fence)
+            if (this.fence.CompletedValue < localFence)
             {
-                this.fence.SetEventOnCompletion(fence, fenceEvent.SafeWaitHandle.DangerousGetHandle());
+                this.fence.SetEventOnCompletion(localFence, fenceEvent.SafeWaitHandle.DangerousGetHandle());
                 fenceEvent.WaitOne();
             }
 
@@ -137,6 +165,9 @@ namespace MpGEPlatformDX12.Display
 
         private void LoadAssets()
         {
+            var rootSignatureDesc = new RootSignatureDescription(RootSignatureFlags.AllowInputAssemblerInputLayout);
+            rootSignature = device.CreateRootSignature(rootSignatureDesc.Serialize());
+
             // Create the command list.
             commandList = device.CreateCommandList(CommandListType.Direct, commandAllocator, null);
 
@@ -227,26 +258,26 @@ namespace MpGEPlatformDX12.Display
         }
         const int FrameCount = 2;
 
-        private ViewportF viewport;
-        private Rectangle scissorRect;
+        public ViewportF viewport;
+        public Rectangle scissorRect;
         // Pipeline objects.
         private SwapChain3 swapChain;
         private Device device;
-        private readonly Resource[] renderTargets = new Resource[FrameCount];
-        private CommandAllocator commandAllocator;
-        private CommandQueue commandQueue;
-        private RootSignature rootSignature;
-        private DescriptorHeap renderTargetViewHeap;
-        private PipelineState pipelineState;
-        private GraphicsCommandList commandList;
-        private int rtvDescriptorSize;
+        public readonly Resource[] renderTargets = new Resource[FrameCount];
+        public CommandAllocator commandAllocator;
+        public CommandQueue commandQueue;
+        public RootSignature rootSignature;
+        public DescriptorHeap renderTargetViewHeap;
+      //  private PipelineState pipelineState;
+        public GraphicsCommandList commandList;
+        public int rtvDescriptorSize;
 
         // App resources.
         Resource vertexBuffer;
         VertexBufferView vertexBufferView;
 
         // Synchronization objects.
-        private int frameIndex;
+        public int frameIndex;
         private AutoResetEvent fenceEvent;
 
         private Fence fence;

@@ -62,9 +62,51 @@ namespace MpGEPlatformDX12.Effect
 
             pipelineState = DXGlobal.device.CreateGraphicsPipelineState(psoDesc);
 
+            commandList = DXGlobal.device.CreateCommandList(CommandListType.Direct, DXGlobal.Display.commandAllocator, pipelineState);
+
 
 
         }
+
+        public void BeginRen()
+        {
+            //commandAllocator.Reset();
+
+            // However, when ExecuteCommandList() is called on a particular command 
+            // list, that command list can then be reset at any time and must be before 
+            // re-recording.
+            commandList.Reset(DXGlobal.Display.commandAllocator, pipelineState);
+
+            commandList.SetGraphicsRootSignature(DXGlobal.Display.rootSignature);
+            commandList.SetViewport(DXGlobal.Display.viewport);
+            commandList.SetScissorRectangles(DXGlobal.Display.scissorRect);
+            commandList.ResourceBarrierTransition(DXGlobal.Display.renderTargets[DXGlobal.Display.frameIndex], ResourceStates.Present, ResourceStates.RenderTarget);
+
+
+            var rtvHandle = DXGlobal.Display.renderTargetViewHeap.CPUDescriptorHandleForHeapStart;
+            rtvHandle += DXGlobal.Display.frameIndex * DXGlobal.Display.rtvDescriptorSize;
+            commandList.SetRenderTargets(rtvHandle, null);
+
+            commandList.ClearRenderTargetView(rtvHandle, new Color4(0.3f, 0.2F, 0.4f, 1), 0, null);
+
+
+
+        }
+
+        public void EndRen()
+        {
+
+            commandList.ResourceBarrierTransition(DXGlobal.Display.renderTargets[DXGlobal.Display.frameIndex], ResourceStates.RenderTarget, ResourceStates.Present);
+
+            commandList.Close();
+
+            DXGlobal.Display.commandQueue.ExecuteCommandList(commandList);
+
+
+        }
+
+        public GraphicsCommandList commandList;
+
 
         public virtual void SetupShader()
         {

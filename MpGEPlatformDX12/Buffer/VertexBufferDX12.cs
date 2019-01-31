@@ -22,8 +22,12 @@ namespace MpGEPlatformDX12.Buffer
 
         }
 
+        public GraphicsCommandList commandList = null;
+
         public override void InitBuffer(MpGe.Data.Vertex[] verts, int size, int stride)
         {
+
+    
 
             int vertexBufferSize = Utilities.SizeOf(verts);
 
@@ -39,11 +43,12 @@ namespace MpGEPlatformDX12.Buffer
             vertexBufferView.BufferLocation = vertexBuffer.GPUVirtualAddress;
             vertexBufferView.StrideInBytes = Utilities.SizeOf<MpGe.Data.Vertex>();
             vertexBufferView.SizeInBytes = vertexBufferSize;
+            
 
         }
 
-        Resource vertexBuffer;
-        VertexBufferView vertexBufferView;
+        public Resource vertexBuffer;
+        public VertexBufferView vertexBufferView;
 
     }
 }
