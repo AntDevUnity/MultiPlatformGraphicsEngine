@@ -22,6 +22,7 @@ namespace MpGEPlatformDX12.Draw2D
                     new Vertex() {Position=new Vector3(0.0f, 0.25f  , 0.0f ),Color=new Vector4(1.0f, 0.0f, 0.0f, 1.0f ) },
                     new Vertex() {Position=new Vector3(0.25f, -0.25f , 0.0f),Color=new Vector4(0.0f, 1.0f, 0.0f, 1.0f) },
                     new Vertex() {Position=new Vector3(-0.25f, -0.25f , 0.0f),Color=new Vector4(0.0f, 0.0f, 1.0f, 1.0f ) },
+                    
             };
             vb = new Buffer.VertexBufferDX12(verts, 0, 0);
             FXSimple2D.commandList.Close();
