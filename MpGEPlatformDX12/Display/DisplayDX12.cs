@@ -134,11 +134,14 @@ namespace MpGEPlatformDX12.Display
 
             var list = buf.commandList;
 
-            list.PrimitiveTopology = SharpDX.Direct3D.PrimitiveTopology.TriangleList;
+      
             list.SetVertexBuffer(0, buf.vertexBufferView);
-        
+            list.SetIndexBuffer(buf.indexBufferView);
+            list.PrimitiveTopology = SharpDX.Direct3D.PrimitiveTopology.TriangleList;
+
+
             list.SetGraphicsRootDescriptorTable(0, eff._cbvHeap.GPUDescriptorHandleForHeapStart);
-            list.DrawInstanced(3, 1, 0, 0);
+            list.DrawIndexedInstanced(buf.IndexCount, 1, 0, 0, 0);
         }
 
 

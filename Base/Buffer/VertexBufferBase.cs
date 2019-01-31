@@ -38,14 +38,19 @@ namespace MpGe.Buffer
             set;
         }
 
-        public VertexBufferBase(Data.Vertex[] verts, int size=0,int stride = 0)
+        public VertexBufferBase(Data.Vertex[] verts,short[] indices, int size=0,int stride = 0)
         {
-            InitBuffer(verts,size, stride);
+            InitBuffer(verts,indices,size, stride);
         }
 
-        public virtual void InitBuffer(Data.Vertex[] verts,int size,int stride)
+        public virtual void InitBuffer(Data.Vertex[] verts,short[] indices,int size,int stride)
         {
            
+        }
+
+        public virtual void Update(Data.Vertex[] verts,short[] indices)
+        {
+
         }
 
     }
