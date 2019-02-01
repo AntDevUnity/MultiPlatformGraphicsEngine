@@ -29,6 +29,8 @@ namespace SampleDX12_1
 
             Create = Global.Creator;
 
+            var tex = Create.LoadTexture("Data/Tex/tex1.png");
+
             Platform.Init = () =>
             {
                 Create = Global.Creator;
@@ -48,10 +50,11 @@ namespace SampleDX12_1
 
             Platform.Draw = () =>
             {
-          
 
-                Draw.Rect(x, 200, 200, 200);
-                Draw.Rect(400, 400, 300, 300);
+                //x = x + 
+
+                Draw.RectTex(x, 200, 200, 200, tex);
+               // Draw.Rect(400, 400, 300, 300);
             };
 
         }

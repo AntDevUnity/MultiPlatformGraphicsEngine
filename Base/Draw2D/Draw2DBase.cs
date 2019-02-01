@@ -34,6 +34,10 @@ namespace MpGe.Draw2D
 
         }
 
+        public virtual void RectTex(float x,float y,float w,float h,Texture.Texture2DBase tex)
+        {
+
+        }
         public virtual void Rect(float x,float y,float w,float h)
         {
 

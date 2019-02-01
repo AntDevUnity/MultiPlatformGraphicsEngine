@@ -21,6 +21,38 @@ namespace MpGEPlatformDX12.Effect
        public static Effect CreateTextured2D()
         {
             var fx = new Effect();
+            fx.RootMake = ()=>{
+                var cbvTable = new DescriptorRange(DescriptorRangeType.ConstantBufferView, 1, 0);
+
+                var rootSignatureDesc = new RootSignatureDescription(RootSignatureFlags.AllowInputAssemblerInputLayout,
+        // Root Parameters
+        new[]
+        {
+              new RootParameter(ShaderVisibility.Vertex, cbvTable)
+            ,
+                    new RootParameter(ShaderVisibility.Pixel,
+                        new DescriptorRange()
+                        {
+                            RangeType = DescriptorRangeType.ShaderResourceView,
+                            DescriptorCount = 1,
+                            OffsetInDescriptorsFromTableStart = int.MinValue,
+                            BaseShaderRegister = 0
+                        })
+        },
+        // Samplers
+        new[]
+        {
+                    new StaticSamplerDescription(ShaderVisibility.Pixel, 0, 0)
+                    {
+                        Filter = Filter.MinimumMinMagMipPoint,
+                        AddressUVW = TextureAddressMode.Border,
+                    }
+        });
+
+                fx.Root = DXGlobal.device.CreateRootSignature(0, rootSignatureDesc.Serialize());
+
+
+            };
             fx.Init = (obj) =>
             {
 
@@ -31,7 +63,7 @@ namespace MpGEPlatformDX12.Effect
                 fx.Input = new[]
                 {
                  new InputElement("POSITION",0,Format.R32G32B32_Float,0,0),
-                    new InputElement("UV",0,Format.R32G32_Float,12,0)
+                    new InputElement("TEXCOORD",0,Format.R32G32_Float,12,0)
                  };
 
                 var cb = new Simple2DConst

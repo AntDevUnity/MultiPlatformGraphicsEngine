@@ -19,5 +19,10 @@ namespace MpGe.Create
             return null;
         }
 
+        public virtual Texture.Texture2DBase LoadTexture(string path)
+        {
+            return null;
+        }
+
     }
 }

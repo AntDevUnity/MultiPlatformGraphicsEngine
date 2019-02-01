@@ -82,7 +82,7 @@ namespace MpGEPlatformDX12.Display
 
         public CommandQueue CommandQueue { get; private set; }
         public CommandAllocator DirectCmdListAlloc { get; private set; }
-        protected GraphicsCommandList CommandList { get; private set; }
+        public GraphicsCommandList CommandList { get; private set; }
 
         protected SwapChain3 SwapChain { get; private set; }
         protected Resource DepthStencilBuffer { get; private set; }
@@ -433,7 +433,7 @@ namespace MpGEPlatformDX12.Display
 
             _factory = new Factory4();
 
-            device = new Device(null, SharpDX.Direct3D.FeatureLevel.Level_12_1);
+            device = new Device(null, SharpDX.Direct3D.FeatureLevel.Level_11_0);
             DXGlobal.device = device;
             this.Device = device;
 
@@ -520,6 +520,7 @@ namespace MpGEPlatformDX12.Display
             var rtvHeapDesc = new DescriptorHeapDescription
             {
                 DescriptorCount = RtvDescriptorCount,
+                Flags = DescriptorHeapFlags.None,
                 Type = DescriptorHeapType.RenderTargetView
             };
             RtvHeap = Device.CreateDescriptorHeap(rtvHeapDesc);
@@ -530,7 +531,21 @@ namespace MpGEPlatformDX12.Display
                 Type = DescriptorHeapType.DepthStencilView
             };
             DsvHeap = Device.CreateDescriptorHeap(dsvHeapDesc);
+
+
+            var srvHeapDesc = new DescriptorHeapDescription()
+            {
+                DescriptorCount = 1,
+                Flags = DescriptorHeapFlags.ShaderVisible,
+                Type = DescriptorHeapType.ConstantBufferViewShaderResourceViewUnorderedAccessView
+            };
+
+            shaderRenderViewHeap = device.CreateDescriptorHeap(srvHeapDesc);
+
+
         }
+
+        DescriptorHeap shaderRenderViewHeap; 
 
         protected void FlushCommandQueue()
         {

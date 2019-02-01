@@ -35,14 +35,27 @@ namespace MpGEPlatformDX12.Effect
 
         public PipelineState pipelineState;
 
+        public delegate void CrRoot();
+
+        public CrRoot RootMake = null;
 
         public void LoadShaders(string path)
         {
 
-            BuildDescriptorHeaps();
+           BuildDescriptorHeaps();
             BuildConstantBuffers<Simple2DConst>();
-            BuildRootSignature();
-            Root = _rootSignature;
+            if (RootMake == null)
+            {
+                BuildRootSignature();
+                Root = _rootSignature;
+            }
+
+            else
+            {
+                RootMake?.Invoke();
+            }
+
+         
 
             VertexCode = LoadVertex(path);
             FragCode = LoadFrag(path);
@@ -65,7 +78,10 @@ namespace MpGEPlatformDX12.Effect
                 SampleDescription = new SharpDX.DXGI.SampleDescription(1, 0),
                 StreamOutput = new StreamOutputDescription()
             };
+         
+          
             psoDesc.RenderTargetFormats[0] = SharpDX.DXGI.Format.R8G8B8A8_UNorm;
+            //psoDesc.
 
             pipelineState = DXGlobal.device.CreateGraphicsPipelineState(psoDesc);
 
@@ -75,7 +91,7 @@ namespace MpGEPlatformDX12.Effect
 
         }
 
-        private static void BuildRootSignature()
+        private void BuildRootSignature()
         {
             // Shader programs typically require resources as input (constant buffers,
             // textures, samplers). The root signature defines the resources the shader
@@ -98,7 +114,8 @@ namespace MpGEPlatformDX12.Effect
             
         }
 
-        private static RootSignature _rootSignature;
+        private  RootSignature _rootSignature;
+
 
         private void BuildDescriptorHeaps()
         {

@@ -17,9 +17,9 @@ namespace MpGEPlatformDX12.Draw2D
         {
             //return;
 
-
+            FXTextured2D = Effect.CreateEffect.CreateTextured2D();
             FXSimple2D = Effect.CreateEffect.CreateSimple2D();
-          //  FXTextured2D = Effect.CreateEffect.CreateTextured2D();
+        
 
             verts = new[]
        {
@@ -56,6 +56,43 @@ namespace MpGEPlatformDX12.Draw2D
         private Buffer.VertexBufferDX12 vb;
         private Vertex[] verts;
         private short[] indices;
+
+        public override void RectTex(float x,float y,float w,float h,MpGe.Texture.Texture2DBase tex)
+        {
+
+
+            vb.commandList = FXSimple2D.commandList;
+            //vb2.commandList = FXSimple2D.commandList;
+
+            verts = new[]
+      {
+                    new Vertex() {Position=new Vector3(x,y  , 0.0f ),Color=new Vector4(1.0f, 0.0f, 0.0f, 1.0f ) },
+                    new Vertex() {Position=new Vector3(x+w,y , 0.0f),Color=new Vector4(0.0f, 1.0f, 0.0f, 1.0f) },
+                    new Vertex() {Position=new Vector3(x+w,y+h , 0.0f),Color=new Vector4(0.0f, 0.0f, 1.0f, 1.0f ) },
+                    new Vertex() {Position=new Vector3(x,y+h,0.0f),Color = new Vector4(1,1,1,1)}
+
+            };
+
+
+
+
+            vb = new Buffer.VertexBufferDX12(verts, indices, 0, 0);
+
+
+            FXSimple2D.BeginRen();
+
+            Effect.Simple2DConst s2 = new Effect.Simple2DConst
+            {
+                Proj = SharpDX.Matrix.OrthoOffCenterLH(0, 800, 600, 0, 0, 1)
+            };
+
+            // FXSimple2D.cbuf.CopyData(0, ref s2);
+            FXTextured2D.cbuf.CopyData(0, ref s2);
+            DXGlobal.Display.DrawBuffer(vb,FXTextured2D);
+            //      DXGlobal.Display.DrawBuffer(vb2,FXSimple2D);
+
+            FXSimple2D.EndRen();
+        }
 
         public override void Rect(float x, float y, float w, float h)
         {

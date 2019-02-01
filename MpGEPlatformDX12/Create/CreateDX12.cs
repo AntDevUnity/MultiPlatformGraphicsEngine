@@ -24,9 +24,10 @@ namespace MpGEPlatformDX12.Create
             return base.CreateEffect();
         }
 
-        public override Texture2D LoadTexture(string path)
+        public override MpGe.Texture.Texture2DBase LoadTexture(string path)
         {
-            var tex = new Texture2D(path);
+            var tex = new Texture.Texture2D(path);
+            return tex as MpGe.Texture.Texture2DBase;
         }
 
 
