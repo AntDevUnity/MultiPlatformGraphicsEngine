@@ -14,6 +14,8 @@ namespace MpGEPlatformDX12.Draw2D
         public Effect.Effect FXSimple2D;
         public override void Init()
         {
+            //return;
+
 
             FXSimple2D = Effect.CreateEffect.CreateSimple2D();
 
@@ -45,7 +47,7 @@ namespace MpGEPlatformDX12.Draw2D
 
           //  vb2 = new Buffer.VertexBufferDX12(verts2, 0, 0);
 
-            FXSimple2D.commandList.Close();
+          //  FXSimple2D.commandList.Close();
 
         }
         private Buffer.VertexBufferDX12 vb2;
@@ -72,7 +74,9 @@ namespace MpGEPlatformDX12.Draw2D
 
 
 
-            vb.Update(verts, indices);
+
+            vb = new Buffer.VertexBufferDX12(verts, indices, 0, 0);
+
 
             FXSimple2D.BeginRen();
 

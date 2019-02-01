@@ -44,12 +44,14 @@ namespace SampleDX12_1
                 Console.WriteLine("Update");
             };
 
-            var x = 0;
+            var x = 20;
 
             Platform.Draw = () =>
             {
           
+
                 Draw.Rect(x, 200, 200, 200);
+                Draw.Rect(400, 400, 300, 300);
             };
 
         }

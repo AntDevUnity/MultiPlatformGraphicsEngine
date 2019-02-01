@@ -69,7 +69,7 @@ namespace MpGEPlatformDX12.Effect
 
             pipelineState = DXGlobal.device.CreateGraphicsPipelineState(psoDesc);
 
-            commandList = DXGlobal.device.CreateCommandList(CommandListType.Direct, DXGlobal.Display.commandAllocator, pipelineState);
+           // commandList = DXGlobal.device.CreateCommandList(CommandListType.Direct, DXGlobal.Display.DirectCmdListAlloc, pipelineState);
 
 
 
@@ -115,7 +115,7 @@ namespace MpGEPlatformDX12.Effect
 
         public DescriptorHeap _cbvHeap;
 
-        static private DescriptorHeap[] _descriptorHeaps;
+        public DescriptorHeap[] _descriptorHeaps;
 
 
 
@@ -148,23 +148,24 @@ namespace MpGEPlatformDX12.Effect
             // However, when ExecuteCommandList() is called on a particular command 
             // list, that command list can then be reset at any time and must be before 
             // re-recording.
-            commandList.Reset(DXGlobal.Display.commandAllocator, pipelineState);
-            commandList.SetViewport(DXGlobal.Display.viewport);
-            commandList.SetScissorRectangles(DXGlobal.Display.scissorRect);
+            //commandList.Reset(DXGlobal.Display.DirectCmdListAlloc, pipelineState);
+            //commandList.SetViewport(DXGlobal.Display.viewport);
+            //commandList.SetScissorRectangles(DXGlobal.Display.scissorRect);
 
-    
-            
-            commandList.ResourceBarrierTransition(DXGlobal.Display.renderTargets[DXGlobal.Display.frameIndex], ResourceStates.Present, ResourceStates.RenderTarget);
-           
+            //commandList.ResourceBarrierTransition(DXGlobal.Display.renderTargets[DXGlobal.Display.frameIndex], ResourceStates.Present, ResourceStates.RenderTarget);
 
-            var rtvHandle = DXGlobal.Display.renderTargetViewHeap.CPUDescriptorHandleForHeapStart;
-            rtvHandle += DXGlobal.Display.frameIndex * DXGlobal.Display.rtvDescriptorSize;
-            commandList.SetRenderTargets(rtvHandle, null);
+           // commandList.SetRenderTargets(DXGlobal.Display.CurrentBackBufferView, DXGlobal.Display.DepthStencilView);
 
-            commandList.ClearRenderTargetView(rtvHandle, new Color4(0.3f, 0.2F, 0.4f, 1), 0, null);
-            commandList.SetDescriptorHeaps(_descriptorHeaps.Length, _descriptorHeaps);
 
-            commandList.SetGraphicsRootSignature(Root);
+           // var rtvHandle = DXGlobal.Display.renderTargetViewHeap.CPUDescriptorHandleForHeapStart;
+           // rtvHandle += DXGlobal.Display.frameIndex * DXGlobal.Display.rtvDescriptorSize;
+            //commandList.SetRenderTargets(DXGlobal.Display.ba. null);
+
+
+
+           // commandList.SetDescriptorHeaps(_descriptorHeaps.Length, _descriptorHeaps);
+
+         //   commandList.SetGraphicsRootSignature(Root);
 
 
         }
@@ -172,11 +173,18 @@ namespace MpGEPlatformDX12.Effect
         public void EndRen()
         {
 
-            commandList.ResourceBarrierTransition(DXGlobal.Display.renderTargets[DXGlobal.Display.frameIndex], ResourceStates.RenderTarget, ResourceStates.Present);
+             //  commandList.ResourceBarrierTransition(DXGlobal.Display.renderTargets[DXGlobal.Display.frameIndex], ResourceStates.RenderTarget, ResourceStates.Present);
 
-            commandList.Close();
+           // commandList.ResourceBarrierTransition(DXGlobal.Display.renderTargets[DXGlobal.Display.frameIndex], ResourceStates.Present, ResourceStates.RenderTarget);
 
-            DXGlobal.Display.commandQueue.ExecuteCommandList(commandList);
+           // commandList.Close();
+
+            //DXGlobal.Display.CommandQueue.ExecuteCommandList(commandList);
+            
+            // commandList.
+
+
+      
 
 
         }
