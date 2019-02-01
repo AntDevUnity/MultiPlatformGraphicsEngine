@@ -123,6 +123,7 @@
     <Compile Include="PlatformExt.cs" />
     <Compile Include="Platform\PlatformDX12.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Texture\Texture2D.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Base\MpGe.csproj">

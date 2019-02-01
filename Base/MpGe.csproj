@@ -123,6 +123,7 @@
     <Compile Include="Display\DisplayBase.cs" />
     <Compile Include="Display\DisplayMetrics.cs" />
     <Compile Include="Base\Result.cs" />
+    <Compile Include="Texture\Texture2D.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

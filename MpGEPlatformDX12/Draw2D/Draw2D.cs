@@ -12,12 +12,14 @@ namespace MpGEPlatformDX12.Draw2D
     public class Draw2D : Draw2DBase
     {
         public Effect.Effect FXSimple2D;
+        public Effect.Effect FXTextured2D;
         public override void Init()
         {
             //return;
 
 
             FXSimple2D = Effect.CreateEffect.CreateSimple2D();
+          //  FXTextured2D = Effect.CreateEffect.CreateTextured2D();
 
             verts = new[]
        {
