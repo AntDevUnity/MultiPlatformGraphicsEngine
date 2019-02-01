@@ -229,7 +229,7 @@ namespace MpGEPlatformDX12.Display
         /// <returns></returns>
         public override MpGe.Base.Result Request()
         {
-
+            Main = this;
             Form = new RenderForm(Metrics.RequestName)
             {
                 Width = Metrics.RequestWidth,
@@ -355,10 +355,12 @@ namespace MpGEPlatformDX12.Display
             CommandList.SetVertexBuffer(0, buf.vertexBufferView);
             CommandList.SetIndexBuffer(buf.indexBufferView);
             CommandList.PrimitiveTopology = SharpDX.Direct3D.PrimitiveTopology.TriangleList;
+            
 
 
-           CommandList.SetGraphicsRootDescriptorTable(0, eff._cbvHeap.GPUDescriptorHandleForHeapStart);
+         CommandList.SetGraphicsRootDescriptorTable(0, eff._cbvHeap.GPUDescriptorHandleForHeapStart);
            CommandList.DrawIndexedInstanced(buf.IndexCount, 1, 0, 0, 0);
+
 
             //CommandQueue.ExecuteCommandList(CommandList);
             //FlushCommandQueue();
@@ -546,8 +548,14 @@ namespace MpGEPlatformDX12.Display
         }
 
         DescriptorHeap shaderRenderViewHeap; 
+        public static void FlushCQ()
+        {
+            Main.FlushCommandQueue();
+        }
 
-        protected void FlushCommandQueue()
+        public static DisplayDX12 Main = null;
+
+        public void FlushCommandQueue()
         {
             // Advance the fence value to mark commands up to this fence point.
             CurrentFence++;

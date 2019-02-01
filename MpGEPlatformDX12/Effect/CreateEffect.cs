@@ -21,31 +21,36 @@ namespace MpGEPlatformDX12.Effect
        public static Effect CreateTextured2D()
         {
             var fx = new Effect();
+            /*
             fx.RootMake = ()=>{
-                var cbvTable = new DescriptorRange(DescriptorRangeType.ConstantBufferView, 1, 0);
+                var cbvTable = new DescriptorRange(DescriptorRangeType.ConstantBufferView,1, 0,0);
 
                 var rootSignatureDesc = new RootSignatureDescription(RootSignatureFlags.AllowInputAssemblerInputLayout,
         // Root Parameters
         new[]
         {
-              new RootParameter(ShaderVisibility.Vertex, cbvTable)
-            ,
+            
+            
                     new RootParameter(ShaderVisibility.Pixel,
                         new DescriptorRange()
                         {
                             RangeType = DescriptorRangeType.ShaderResourceView,
-                            DescriptorCount = 1,
-                            OffsetInDescriptorsFromTableStart = int.MinValue,
-                            BaseShaderRegister = 0
+                            DescriptorCount =1,
+                            RegisterSpace = 0,
+                            OffsetInDescriptorsFromTableStart = 0,
+                           
+                            //BaseShaderRegister = 0,
+                            
                         })
         },
         // Samplers
         new[]
         {
-                    new StaticSamplerDescription(ShaderVisibility.Pixel, 0, 0)
+                    new StaticSamplerDescription(ShaderVisibility.Pixel, 0,0)
                     {
                         Filter = Filter.MinimumMinMagMipPoint,
                         AddressUVW = TextureAddressMode.Border,
+                      //  RegisterSpace = 0
                     }
         });
 
@@ -53,6 +58,7 @@ namespace MpGEPlatformDX12.Effect
 
 
             };
+            */
             fx.Init = (obj) =>
             {
 

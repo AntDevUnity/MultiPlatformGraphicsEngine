@@ -54,7 +54,7 @@ namespace MpGEPlatformDX12.Buffer
 
             indexBufferView = new IndexBufferView();
             indexBufferView.BufferLocation = indexBuffer.GPUVirtualAddress;
-            indexBufferView.Format = Format.D16_UNorm;
+            indexBufferView.Format = Format.R16_Typeless;
             indexBufferView.SizeInBytes = indexBufferSize;
 
 

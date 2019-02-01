@@ -84,12 +84,13 @@ namespace MpGEPlatformDX12.Effect
             //psoDesc.
 
             pipelineState = DXGlobal.device.CreateGraphicsPipelineState(psoDesc);
-
+            _pip = pipelineState;
            // commandList = DXGlobal.device.CreateCommandList(CommandListType.Direct, DXGlobal.Display.DirectCmdListAlloc, pipelineState);
 
 
 
         }
+        public static PipelineState _pip;
 
         private void BuildRootSignature()
         {
@@ -121,13 +122,19 @@ namespace MpGEPlatformDX12.Effect
         {
             var cbvHeapDesc = new DescriptorHeapDescription
             {
-                DescriptorCount = 1,
+                DescriptorCount = 2,
                 Type = DescriptorHeapType.ConstantBufferViewShaderResourceViewUnorderedAccessView,
-                Flags = DescriptorHeapFlags.ShaderVisible,
-                NodeMask = 0
+                Flags = DescriptorHeapFlags.ShaderVisible
+
             };
+
+            //_cbvHeap.
+         //   DXGlobal.device.
+
+
             _cbvHeap = DXGlobal.device.CreateDescriptorHeap(cbvHeapDesc);
             _descriptorHeaps = new[] { _cbvHeap };
+            _cheap = _cbvHeap;
         }
 
         public DescriptorHeap _cbvHeap;
@@ -151,7 +158,7 @@ namespace MpGEPlatformDX12.Effect
             CpuDescriptorHandle cbvHeapHandle = _cbvHeap.CPUDescriptorHandleForHeapStart;
             DXGlobal.device.CreateConstantBufferView(cbvDesc, cbvHeapHandle);
         }
-
+        public static DescriptorHeap _cheap = null;
 
         public dynamic cbuf = null;
         //DXUtil2.UploadBuffer<ConType> _conBuf;

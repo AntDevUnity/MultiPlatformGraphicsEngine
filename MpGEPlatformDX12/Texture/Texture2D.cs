@@ -18,18 +18,29 @@ namespace MpGEPlatformDX12.Texture
     public class Texture2D : MpGe.Texture.Texture2DBase
     {
 
-        public Texture2D(string path)
+        public Texture2D(string path2)
         {
+            path = path2;
+            Load(path2);
 
-            Load(path);
+        }
+        string path = "";
+        public CpuDescriptorHandle toDH;
+        public DescriptorHeap dH;
+        public ConstantBufferViewDescription cbv;
+        bool done = false;
+        public void SetHeap()
+        {
+           
 
         }
 
-
-        Resource texture;
-        public override void Load(string path)
+        public Resource texture;
+        public override void Load(string path2)
         {
-
+            if (done) return;
+            done = true;
+            
             Bitmap bm = new Bitmap(path);
 
             Width = bm.Width;
@@ -54,10 +65,10 @@ namespace MpGEPlatformDX12.Texture
                 for(int x = 0; x < Width; x++)
                 {
                     var pix = bm.GetPixel(x, y);
-                    textureData[loc++] = pix.R;
-                    textureData[loc++] = pix.G;
-                    textureData[loc++] = pix.B;
-                    textureData[loc++] = 255;
+                    textureData[loc++] = 0xff; //pix.R;
+                    textureData[loc++] = 0xff;//pix.G;
+                    textureData[loc++] = 0xff; // pix.B;
+                    textureData[loc++] = 0xff;
                 }
             }
 
@@ -65,30 +76,44 @@ namespace MpGEPlatformDX12.Texture
             var ptr = Marshal.UnsafeAddrOfPinnedArrayElement(textureData, 0);
             textureUploadHeap.WriteToSubresource(0, null, ptr, Depth * Width, textureData.Length);
             handle.Free();
-
-            DXGlobal.Display.CommandList.Reset(DXGlobal.Display.DirectCmdListAlloc, null);
+         //   DXGlobal.Display.CommandList.Close();
+            DXGlobal.Display.CommandList.Reset(DXGlobal.Display.DirectCmdListAlloc,Effect.Effect._pip);
 
             DXGlobal.Display.CommandList.CopyTextureRegion(new TextureCopyLocation(texture, 0), 0, 0, 0, new TextureCopyLocation(textureUploadHeap, 0), null);
 
             DXGlobal.Display.CommandList.ResourceBarrierTransition(this.texture, ResourceStates.CopyDestination, ResourceStates.PixelShaderResource);
 
             // Describe and create a SRV for the texture.
-            var srvDesc = new ShaderResourceViewDescription
+            srvDesc = new ShaderResourceViewDescription
             {
                 Shader4ComponentMapping = D3DXUtilities.DefaultComponentMapping(),
                 Format = textureDesc.Format,
                 Dimension = ShaderResourceViewDimension.Texture2D,
                 Texture2D = { MipLevels = 1 },
             };
+            var srvHeapDesc = new DescriptorHeapDescription()
+            {
+                DescriptorCount = 1,
+                Flags = DescriptorHeapFlags.ShaderVisible,
+                Type = DescriptorHeapType.ConstantBufferViewShaderResourceViewUnorderedAccessView
+            };
 
-            //DXGlobal.device.CreateShaderResourceView(this.texture, srvDesc, shaderRenderViewHeap.CPUDescriptorHandleForHeapStart);
+             DescriptorHeap srvH = DXGlobal.device.CreateDescriptorHeap(srvHeapDesc);
+
+
+           DXGlobal.device.CreateShaderResourceView(texture, srvDesc,srvH.CPUDescriptorHandleForHeapStart);
+
+
+
 
             DXGlobal.Display.CommandList.Close();
             DXGlobal.Display.CommandQueue.ExecuteCommandList(DXGlobal.Display.CommandList);
+            DXGlobal.Display.FlushCommandQueue();
+            
 
         }
-        
-
+        public DescriptorHeap texHeap;
+        public ShaderResourceViewDescription srvDesc;
 
         public class D3DXUtilities
         {

@@ -29,15 +29,19 @@ namespace SampleDX12_1
 
             Create = Global.Creator;
 
-            var tex = Create.LoadTexture("Data/Tex/tex1.png");
+            MpGe.Texture.Texture2DBase tex = null;
+    
 
             Platform.Init = () =>
             {
                 Create = Global.Creator;
 
                 Draw = Create.CreateDraw2D();
-
+                 tex = Create.LoadTexture("Data/Tex/tex1.png");
                 Console.WriteLine("Init App");
+
+
+                
 
             };
 
@@ -53,7 +57,7 @@ namespace SampleDX12_1
 
                 //x = x + 
 
-                Draw.RectTex(x, 200, 200, 200, tex);
+                Draw.RectTex(-0.2f,-0.2f, 0.4f, 0.4f, tex);
                // Draw.Rect(400, 400, 300, 300);
             };
 

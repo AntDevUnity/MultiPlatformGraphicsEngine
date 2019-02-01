@@ -13,7 +13,7 @@ namespace MpGe.Data
     {
 
         public Vector3 Position;
-        public Vector4 Color;
+        public Vector2 UV;
  
 
 

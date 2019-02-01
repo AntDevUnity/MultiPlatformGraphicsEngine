@@ -9,6 +9,9 @@ using MpGe.Data;
 
 namespace MpGEPlatformDX12.Draw2D
 {
+
+    using SharpDX.Direct3D12;
+    using SharpDX.Windows;
     public class Draw2D : Draw2DBase
     {
         public Effect.Effect FXSimple2D;
@@ -18,24 +21,19 @@ namespace MpGEPlatformDX12.Draw2D
             //return;
 
             FXTextured2D = Effect.CreateEffect.CreateTextured2D();
-            FXSimple2D = Effect.CreateEffect.CreateSimple2D();
-        
+        //    FXSimple2D = Effect.CreateEffect.CreateSimple2D();
 
+            float x = 20, y = 20, w = 100, h = 100;
             verts = new[]
-       {
-                    new Vertex() {Position=new Vector3(200,100f  , 0.0f ),Color=new Vector4(1.0f, 0.0f, 0.0f, 1.0f ) },
-                    new Vertex() {Position=new Vector3(440f,100f , 0.0f),Color=new Vector4(0.0f, 1.0f, 0.0f, 1.0f) },
-                    new Vertex() {Position=new Vector3(440f,300 , 0.0f),Color=new Vector4(0.0f, 0.0f, 1.0f, 1.0f ) },
-                    new Vertex() {Position= new Vector3(400,500,0),Color = new Vector4(1,1,1,1)}
+{
+                    new Vertex() {Position=new Vector3(x,y  , 0.0f ),UV=new Vector2(0.0f, 0.0f) },
+                    new Vertex() {Position=new Vector3(x+w,y , 0.0f),UV=new Vector2(1.0f,0) },
+                    new Vertex() {Position=new Vector3(x+w,y+h , 0.0f),UV=new Vector2(1.0f, 1.0f ) },
+                    new Vertex() {Position=new Vector3(x,y+h,0.0f),UV = new Vector2(0,1)}
+
             };
 
-            var verts2 = new[]
-      {
-                    new Vertex() {Position=new Vector3(0.7f, 0.15f  , 0.1f ),Color=new Vector4(1.0f, 0.0f, 0.0f, 1.0f ) },
-                    new Vertex() {Position=new Vector3(200f, 2f , 0.1f),Color=new Vector4(0.0f, 1.0f, 0.0f, 1.0f) },
-                    new Vertex() {Position=new Vector3(200f, 200f , 0.1f),Color=new Vector4(0.0f, 0.0f, 1.0f, 1.0f ) },
-                    new Vertex() { Position = new Vector3(20,200,0.1f),Color = new Vector4(1,1,1,1)}
-            };
+
 
             short[] ind = {
                 0,1,2,2,3,0
@@ -56,20 +54,21 @@ namespace MpGEPlatformDX12.Draw2D
         private Buffer.VertexBufferDX12 vb;
         private Vertex[] verts;
         private short[] indices;
-
+        bool first = true;
         public override void RectTex(float x,float y,float w,float h,MpGe.Texture.Texture2DBase tex)
         {
 
+            var t2 = tex as Texture.Texture2D;
 
-            vb.commandList = FXSimple2D.commandList;
+       //     vb.commandList = FXSimple2D.commandList;
             //vb2.commandList = FXSimple2D.commandList;
 
             verts = new[]
       {
-                    new Vertex() {Position=new Vector3(x,y  , 0.0f ),Color=new Vector4(1.0f, 0.0f, 0.0f, 1.0f ) },
-                    new Vertex() {Position=new Vector3(x+w,y , 0.0f),Color=new Vector4(0.0f, 1.0f, 0.0f, 1.0f) },
-                    new Vertex() {Position=new Vector3(x+w,y+h , 0.0f),Color=new Vector4(0.0f, 0.0f, 1.0f, 1.0f ) },
-                    new Vertex() {Position=new Vector3(x,y+h,0.0f),Color = new Vector4(1,1,1,1)}
+                    new Vertex() {Position=new Vector3(x,y  , 0.0f ),UV=new Vector2(0.0f, 0.0f) },
+                    new Vertex() {Position=new Vector3(x+w,y , 0.0f),UV=new Vector2(1.0f,0) },
+                    new Vertex() {Position=new Vector3(x+w,y+h , 0.0f),UV=new Vector2(1.0f, 1.0f ) },
+                    new Vertex() {Position=new Vector3(x,y+h,0.0f),UV = new Vector2(0,1)}
 
             };
 
@@ -79,7 +78,16 @@ namespace MpGEPlatformDX12.Draw2D
             vb = new Buffer.VertexBufferDX12(verts, indices, 0, 0);
 
 
-            FXSimple2D.BeginRen();
+
+          
+        
+
+            //t2.SetHeap();
+
+
+                FXTextured2D._descriptorHeaps = new[] { FXTextured2D._cbvHeap };
+      
+            //            FXSimple2D.BeginRen();
 
             Effect.Simple2DConst s2 = new Effect.Simple2DConst
             {
@@ -91,7 +99,7 @@ namespace MpGEPlatformDX12.Draw2D
             DXGlobal.Display.DrawBuffer(vb,FXTextured2D);
             //      DXGlobal.Display.DrawBuffer(vb2,FXSimple2D);
 
-            FXSimple2D.EndRen();
+  //          FXSimple2D.EndRen();
         }
 
         public override void Rect(float x, float y, float w, float h)
@@ -103,11 +111,11 @@ namespace MpGEPlatformDX12.Draw2D
             //vb2.commandList = FXSimple2D.commandList;
 
             verts = new[]
-      {
-                    new Vertex() {Position=new Vector3(x,y  , 0.0f ),Color=new Vector4(1.0f, 0.0f, 0.0f, 1.0f ) },
-                    new Vertex() {Position=new Vector3(x+w,y , 0.0f),Color=new Vector4(0.0f, 1.0f, 0.0f, 1.0f) },
-                    new Vertex() {Position=new Vector3(x+w,y+h , 0.0f),Color=new Vector4(0.0f, 0.0f, 1.0f, 1.0f ) },
-                    new Vertex() {Position=new Vector3(x,y+h,0.0f),Color = new Vector4(1,1,1,1)}
+  {
+                    new Vertex() {Position=new Vector3(x,y  , 0.0f ),UV=new Vector2(0.0f, 0.0f) },
+                    new Vertex() {Position=new Vector3(x+w,y , 0.0f),UV=new Vector2(1.0f,0) },
+                    new Vertex() {Position=new Vector3(x+w,y+h , 0.0f),UV=new Vector2(1.0f, 1.0f ) },
+                    new Vertex() {Position=new Vector3(x,y+h,0.0f),UV = new Vector2(0,1)}
 
             };
 
